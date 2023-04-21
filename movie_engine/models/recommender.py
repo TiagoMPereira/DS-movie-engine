@@ -14,27 +14,23 @@ class MovieModel(object):
 
     def __init__(self, data: pd.DataFrame, metadata: pd.DataFrame) -> None:
         self.movies = data.set_index("tmdb_id")
+        self.movies.drop(columns=['vote_average', 'popularity_class'], inplace=True)
         self.metadata = metadata.set_index("tmdb_id")
 
         self.release_year_scaler = Scaler()
         self.runtime_scaler = Scaler()
-        self.vote_average_scaler = Scaler()
 
         self.languages_encoder = LanguageEncoder(Languages())
         self.genres_encoder = GenreEncoder(Genres())
-        self.popularity_encoder = PopularityEncoder()
 
     def fit(self):
         self.release_year_scaler.fit(self.movies["release_year"])
         self.runtime_scaler.fit(self.movies["runtime"])
-        self.vote_average_scaler.fit(self.movies["vote_average"])
 
         self.movies["release_year"] = self.release_year_scaler.\
             transform(self.movies["release_year"])
         self.movies["runtime"] = self.runtime_scaler.\
             transform(self.movies["runtime"])
-        self.movies["vote_average"] = self.vote_average_scaler.\
-            transform(self.movies["vote_average"])
 
     def predict(self, inputPredict: InputPredict, n_predictions=5):
 
@@ -43,11 +39,8 @@ class MovieModel(object):
 
         predict_dict.update(self.languages_encoder.encode(inputPredict.language))
 
-        predict_dict.update({"popularity_class": self.popularity_encoder.encode(inputPredict.popularity)})
-
         predict_dict.update({"release_year": self.release_year_scaler.transform(inputPredict.release_year)})
         predict_dict.update({"runtime": self.runtime_scaler.transform(inputPredict.runtime)})
-        predict_dict.update({"vote_average": self.vote_average_scaler.transform(inputPredict.vote_average)})
 
         predict_df = pd.DataFrame([predict_dict])
         predict_df = predict_df[list(self.movies.columns)]

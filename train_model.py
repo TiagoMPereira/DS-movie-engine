@@ -16,13 +16,11 @@ if __name__ == "__main__":
 
     test = InputPredict()
     test.genre1 = "adventure"
-    test.genre2 = "family"
-    test.genre3 = "fantasy"
-    test.release_year = 2001
-    test.runtime = 152
-    test.vote_average = 7.5
-    test.popularity = 38
-    test.language = "english"
+    test.genre2 = "action"
+    test.genre3 = None
+    test.release_year = 2000
+    test.runtime = 100
+    test.language = None
 
     recommended = model.predict(test)
 
