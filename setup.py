@@ -4,7 +4,7 @@ with open('requirements.txt') as f:
     required = f.read().splitlines()
 setuptools.setup(
     name='movie_engine',
-    version='0.1.0',
+    version='0.1.2',
     packages=setuptools.find_packages(),
     author='morales',
     author_email='tiago.pereira@gec.inatel.br',
